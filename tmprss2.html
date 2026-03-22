@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TMPRSS2 gRNA Analysis — Rewild Utah</title>
+<meta name="description" content="CRISPR gRNA candidate analysis for wolf TMPRSS2 — canine distemper virus resistance and reintroduction genomics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --ink:       #1a1a18;
+  --ink-2:     #3d3d38;
+  --ink-3:     #6b6b64;
+  --fog:       #f4f2ed;
+  --fog-2:     #e8e5dd;
+  --fog-3:     #d8d4c8;
+  --accent:    #2e5e3e;
+  --accent-2:  #4a8c60;
+  --accent-lt: #eaf2ec;
+  --rust:      #8b3a20;
+  --sand:      #c9a96e;
+  --white:     #fafaf7;
+  --serif:  'Playfair Display', Georgia, serif;
+  --sans:   'DM Sans', sans-serif;
+  --mono:   'DM Mono', monospace;
+  --r-sm: 4px; --r-md: 8px; --r-lg: 14px;
+  --max: 1100px; --nav-h: 64px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: var(--sans); background: var(--white); color: var(--ink); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: var(--sans); }
+h1,h2,h3 { font-family: var(--serif); line-height: 1.2; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--nav-h); display: flex; align-items: center;
+  padding: 0 2rem;
+  background: rgba(250,250,247,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--fog-3);
+}
+.nav-inner { max-width: var(--max); width: 100%; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+.nav-logo { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; color: var(--accent); }
+.nav-logo span { color: var(--ink-3); font-weight: 400; font-style: italic; }
+.nav-back { font-size: 0.875rem; color: var(--ink-3); display: flex; align-items: center; gap: 0.4rem; transition: color 0.15s; }
+.nav-back:hover { color: var(--accent); }
+
+/* HERO */
+.page-hero {
+  padding: calc(var(--nav-h) + 4rem) 2rem 4rem;
+  background: var(--fog);
+  border-bottom: 1px solid var(--fog-3);
+}
+.page-hero-inner { max-width: var(--max); margin: 0 auto; }
+.breadcrumb { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--ink-3); margin-bottom: 1.25rem; }
+.breadcrumb a { color: var(--accent); }
+.breadcrumb span { margin: 0 0.4rem; }
+.page-hero h1 { font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 600; margin-bottom: 1rem; }
+.page-hero h1 em { font-style: italic; color: var(--accent); }
+.page-hero-meta { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.meta-chip { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; color: var(--ink-3); background: var(--fog-2); border: 1px solid var(--fog-3); border-radius: 100px; padding: 0.25rem 0.75rem; }
+.page-hero-lead { font-size: 1.05rem; color: var(--ink-2); line-height: 1.8; max-width: 700px; }
+
+/* LAYOUT */
+.page-body { max-width: var(--max); margin: 0 auto; padding: 4rem 2rem; display: grid; grid-template-columns: 1fr 280px; gap: 4rem; align-items: start; }
+.page-content { min-width: 0; }
+.page-sidebar { position: sticky; top: calc(var(--nav-h) + 2rem); }
+
+/* SECTION */
+.content-section { margin-bottom: 4rem; }
+.section-label { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+.content-section h2 { font-size: 1.6rem; font-weight: 600; margin-bottom: 1rem; }
+.content-section p { color: var(--ink-2); font-size: 0.975rem; line-height: 1.8; margin-bottom: 1rem; }
+.divider { width: 40px; height: 2px; background: var(--accent); margin: 1.25rem 0; }
+
+/* EXPLAINER CARDS */
+.explainer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+.explainer-card { background: var(--fog); border: 1px solid var(--fog-3); border-radius: var(--r-lg); padding: 1.25rem 1.5rem; }
+.explainer-card h3 { font-family: var(--serif); font-size: 1rem; margin-bottom: 0.5rem; }
+.explainer-card p { font-size: 0.85rem; color: var(--ink-2); line-height: 1.65; margin: 0; }
+
+/* CALLOUT */
+.callout { background: var(--accent-lt); border: 1px solid rgba(46,94,62,0.2); border-left: 3px solid var(--accent); border-radius: var(--r-md); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+.callout-label { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.35rem; }
+.callout p { font-size: 0.875rem; color: var(--ink-2); margin: 0; line-height: 1.7; }
+
+/* PIPELINE DIAGRAM */
+.pipeline-wrap { background: var(--white); border: 1px solid var(--fog-3); border-radius: var(--r-lg); padding: 2rem; margin: 2rem 0; overflow-x: auto; }
+.pipeline-row { display: flex; align-items: flex-start; gap: 0; min-width: 560px; }
+.pipeline-node-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+.pipeline-node-wrap:not(:last-child)::after {
+  content: ''; position: absolute;
+  top: 20px; left: 50%; right: -50%;
+  height: 2px; background: var(--fog-3); z-index: 0;
+}
+.pipeline-node-wrap.done::after { background: var(--accent); }
+.p-node {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--mono); font-size: 0.75rem; font-weight: 500;
+  border: 2px solid var(--fog-3); background: var(--white); color: var(--ink-3);
+  position: relative; z-index: 1; margin-bottom: 0.75rem;
+  transition: all 0.2s;
+}
+.pipeline-node-wrap.done .p-node { background: var(--accent); border-color: var(--accent); color: var(--white); }
+.pipeline-node-wrap.active .p-node { border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 4px var(--accent-lt); }
+.p-label { font-size: 0.78rem; font-weight: 500; color: var(--ink); text-align: center; margin-bottom: 0.25rem; }
+.p-sublabel { font-size: 0.7rem; color: var(--ink-3); text-align: center; line-height: 1.4; max-width: 80px; }
+.pipeline-node-wrap.done .p-label { color: var(--accent); }
+.pipeline-detail { display: none; margin-top: 1.5rem; border-top: 1px solid var(--fog-3); padding-top: 1.5rem; }
+.pipeline-detail.visible { display: block; }
+.pipeline-detail-inner { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; }
+.pd-item { background: var(--fog); border-radius: var(--r-md); padding: 0.75rem 1rem; }
+.pd-step { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.3rem; }
+.pd-text { font-size: 0.78rem; color: var(--ink-2); line-height: 1.5; }
+
+/* gRNA TABLE */
+.table-controls { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; }
+.filter-btn { font-size: 0.78rem; padding: 0.3rem 0.75rem; border-radius: 100px; border: 1px solid var(--fog-3); background: var(--white); color: var(--ink-2); cursor: pointer; transition: all 0.15s; }
+.filter-btn.active { background: var(--accent-lt); border-color: rgba(46,94,62,0.4); color: var(--accent); font-weight: 500; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--fog-3); border-radius: var(--r-lg); }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+thead { background: var(--fog); }
+th { padding: 0.75rem 1rem; text-align: left; font-weight: 500; font-size: 0.78rem; color: var(--ink-3); border-bottom: 1px solid var(--fog-3); white-space: nowrap; cursor: pointer; user-select: none; }
+th:hover { color: var(--ink); }
+th .sort-icon { font-size: 0.65rem; margin-left: 0.25rem; opacity: 0.5; }
+td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--fog-2); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--fog); }
+.seq-cell { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--ink); }
+.rank-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; font-size: 0.72rem; font-weight: 500; background: var(--fog-2); color: var(--ink-3); }
+.rank-badge.top { background: var(--accent); color: white; }
+.risk-chip { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 500; padding: 0.2rem 0.6rem; border-radius: 100px; }
+.risk-low    { background: #e6f4ec; color: #1e6b3a; }
+.risk-medium { background: #fef3e2; color: #8b5e1a; }
+.risk-na     { background: var(--fog-2); color: var(--ink-3); }
+.risk-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.risk-low .risk-dot    { background: #1e6b3a; }
+.risk-medium .risk-dot { background: #e09c2f; }
+.risk-na .risk-dot     { background: var(--ink-3); }
+.score-bar-wrap { display: flex; align-items: center; gap: 0.5rem; }
+.score-bar { height: 6px; background: var(--fog-2); border-radius: 3px; flex: 1; overflow: hidden; }
+.score-bar-fill { height: 100%; border-radius: 3px; background: var(--accent); transition: width 0.3s; }
+.score-num { font-family: var(--mono); font-size: 0.78rem; color: var(--ink); min-width: 36px; }
+.rec-tag { font-size: 0.72rem; color: var(--ink-3); }
+.rec-tag.priority { color: var(--accent); font-weight: 500; }
+.table-footer { padding: 0.75rem 1rem; background: var(--fog); border-top: 1px solid var(--fog-3); border-radius: 0 0 var(--r-lg) var(--r-lg); font-size: 0.78rem; color: var(--ink-3); display: flex; justify-content: space-between; align-items: center; }
+.row-hidden { display: none; }
+
+/* SIDEBAR */
+.sidebar-card { background: var(--fog); border: 1px solid var(--fog-3); border-radius: var(--r-lg); padding: 1.25rem; margin-bottom: 1.25rem; }
+.sidebar-card h3 { font-family: var(--serif); font-size: 1rem; margin-bottom: 0.75rem; }
+.sidebar-stat { display: flex; justify-content: space-between; align-items: baseline; padding: 0.4rem 0; border-bottom: 1px solid var(--fog-3); font-size: 0.85rem; }
+.sidebar-stat:last-child { border-bottom: none; }
+.sidebar-stat-label { color: var(--ink-3); }
+.sidebar-stat-val { font-family: var(--mono); font-weight: 500; color: var(--ink); }
+.sidebar-link { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--accent); margin-bottom: 0.5rem; border-bottom: 1px solid var(--accent-lt); padding-bottom: 0.5rem; }
+.sidebar-link:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+
+/* FOOTER */
+footer { background: var(--ink); color: rgba(255,255,255,0.6); padding: 2.5rem 2rem; margin-top: 4rem; }
+.footer-inner { max-width: var(--max); margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; font-size: 0.825rem; }
+.footer-logo { font-family: var(--serif); color: var(--white); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* RESPONSIVE */
+@media (max-width: 800px) {
+  .page-body { grid-template-columns: 1fr; }
+  .page-sidebar { position: static; }
+  .explainer-grid { grid-template-columns: 1fr; }
+  .pipeline-detail-inner { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Rewild<span>Utah</span></a>
+    <a href="index.html#research" class="nav-back">← Back to research</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Rewild Utah</a>
+      <span>›</span>
+      <a href="index.html#research">Research</a>
+      <span>›</span>
+      TMPRSS2 gRNA analysis
+    </div>
+    <h1>CRISPR gRNA design for<br><em>wolf TMPRSS2</em></h1>
+    <div class="page-hero-meta">
+      <span class="meta-chip">CRISPR / Cas9</span>
+      <span class="meta-chip">Canis lupus baileyi</span>
+      <span class="meta-chip">Accession: XM_072807049.1</span>
+      <span class="meta-chip">649 candidates scanned</span>
+      <span class="meta-chip">Status: active</span>
+    </div>
+    <p class="page-hero-lead">
+      Canine distemper virus is a leading killer of reintroduced wolf populations.
+      This analysis identifies CRISPR-Cas9 guide RNA candidates targeting
+      the TMPRSS2 gene in Mexican gray wolves, a potential pathway to CDV
+      resistance that could meaningfully improve reintroduction survival rates.
+    </p>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="page-body">
+<div class="page-content">
+
+  <!-- EXPLAINER -->
+  <div class="content-section reveal">
+    <p class="section-label">Background</p>
+    <h2>Why CDV resistance matters for wolf reintroduction</h2>
+    <div class="divider"></div>
+
+    <p>
+      Canine distemper virus (CDV) is a paramyxovirus closely related to measles.
+      In wolves, it causes respiratory, gastrointestinal, and neurological disease
+      with case fatality rates that can reach 50–90% in naive populations.
+      Reintroduced wolf packs are already stressed by translocation, unfamiliar
+      territory, and small founding numbers, so a CDV outbreak can be catastrophic.
+    </p>
+    <p>
+      In Yellowstone, CDV contributed to significant pup mortality between 1999 and 2005,
+      slowing recovery of the Northern Rocky Mountain population during its most
+      critical early years. The Mexican gray wolf (<em>Canis lupus baileyi</em>)
+      recovery program is the most endangered wolf subspecies in the world, with
+      fewer than 200 individuals in the wild. A single outbreak there could
+      meaningfully set back decades of recovery work.
+    </p>
+
+    <div class="callout">
+      <div class="callout-label">The TMPRSS2 connection</div>
+      <p>
+        CDV, like many enveloped viruses, requires host cell proteases to activate
+        its fusion protein for cell entry. TMPRSS2 (Transmembrane Serine Protease 2)
+        is one of the key proteases CDV exploits. Disrupting or modifying TMPRSS2
+        expression could reduce cellular susceptibility to CDV. This is the same mechanism
+        studied extensively in SARS-CoV-2 research, where TMPRSS2 inhibition
+        significantly reduced viral entry.
+      </p>
+    </div>
+
+    <div class="explainer-grid">
+      <div class="explainer-card">
+        <h3>What is CRISPR-Cas9?</h3>
+        <p>A molecular tool that uses a guide RNA (gRNA) to direct the Cas9 enzyme to a precise location in the genome, where it makes a targeted cut. That cut can disrupt a gene, correct a mutation, or insert new sequence.</p>
+      </div>
+      <div class="explainer-card">
+        <h3>What is a gRNA?</h3>
+        <p>A 20-nucleotide RNA sequence that acts as a GPS coordinate for Cas9. It matches the target DNA sequence exactly. This analysis identifies which 20-base windows in the TMPRSS2 gene are the best targets for efficient, safe editing.</p>
+      </div>
+      <div class="explainer-card">
+        <h3>What does "off-target risk" mean?</h3>
+        <p>Cas9 can sometimes cut at unintended sites in the genome that partially resemble the target. We use NCBI BLAST to search the entire wolf genome for near-matches, flagging any gRNA with too many close hits as higher risk.</p>
+      </div>
+      <div class="explainer-card">
+        <h3>What would this mean in practice?</h3>
+        <p>This is computational prediction only. Experimental validation in cell culture and animal models would be required before any application. The immediate value is as a framework for deciding which targets are worth pursuing in the lab.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="content-section reveal">
+    <p class="section-label">Methods</p>
+    <h2>Analysis pipeline</h2>
+    <div class="divider"></div>
+    <p>
+      The pipeline is fully open-source and reproducible. Each stage is implemented
+      as a standalone Python module using Biopython and pandas, with NCBI remote
+      BLAST for off-target validation. All code is available on GitHub.
+    </p>
+
+    <div class="pipeline-wrap">
+      <div class="pipeline-row">
+        <div class="pipeline-node-wrap done" onclick="showPipelineDetail(0)">
+          <div class="p-node">✓</div>
+          <div class="p-label">Fetch</div>
+          <div class="p-sublabel">NCBI GenBank retrieval</div>
+        </div>
+        <div class="pipeline-node-wrap done" onclick="showPipelineDetail(1)">
+          <div class="p-node">✓</div>
+          <div class="p-label">Scan</div>
+          <div class="p-sublabel">NGG PAM site detection</div>
+        </div>
+        <div class="pipeline-node-wrap done" onclick="showPipelineDetail(2)">
+          <div class="p-node">✓</div>
+          <div class="p-label">Score</div>
+          <div class="p-sublabel">Doench efficiency model</div>
+        </div>
+        <div class="pipeline-node-wrap done" onclick="showPipelineDetail(3)">
+          <div class="p-node">✓</div>
+          <div class="p-label">BLAST</div>
+          <div class="p-sublabel">Off-target NCBI search</div>
+        </div>
+        <div class="pipeline-node-wrap done" onclick="showPipelineDetail(4)">
+          <div class="p-node">✓</div>
+          <div class="p-label">Report</div>
+          <div class="p-sublabel">Final ranked output</div>
+        </div>
+      </div>
+
+      <div class="pipeline-detail" id="pipeline-detail">
+        <div class="pipeline-detail-inner">
+          <div class="pd-item" id="pd-0">
+            <div class="pd-step">Step 1 — Fetch</div>
+            <div class="pd-text">Downloads wolf TMPRSS2 mRNA from NCBI GenBank (accession XM_072807049.1) via Biopython Entrez. Cached locally as wolf_tmprss2.gb to avoid repeated API calls.</div>
+          </div>
+          <div class="pd-item" id="pd-1">
+            <div class="pd-step">Step 2 — Scan</div>
+            <div class="pd-text">Slides a 20-nt window along both strands, detecting NGG PAM sites. Found 649 candidate gRNAs total (330 forward, 319 reverse). Filtered to 292 overlapping the coding sequence (CDS: 330–1809).</div>
+          </div>
+          <div class="pd-item" id="pd-2">
+            <div class="pd-step">Step 3 — Score</div>
+            <div class="pd-text">Applies a position-weight model based on Doench 2016 (PMID: 26780180), incorporating GC content, poly-T avoidance, and nucleotide context. Ranked top 20 candidates by composite score.</div>
+          </div>
+          <div class="pd-item" id="pd-3">
+            <div class="pd-step">Step 4 — BLAST</div>
+            <div class="pd-text">Remote NCBI blastn against the nt database filtered to Canis lupus. word_size=7, hitlist_size=50. Off-target threshold: ≤3 mismatches. BLASTed top 5 candidates; 4 returned zero off-target hits.</div>
+          </div>
+          <div class="pd-item" id="pd-4">
+            <div class="pd-step">Step 5 — Report</div>
+            <div class="pd-text">Final score = composite score × risk penalty (LOW: 1.0×, MED: 0.9×, HIGH: 0.6×). Rank #1 candidate AGTCCTGCTGGATTTCCGGG scores 0.930 with zero off-target hits.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:0.82rem;color:var(--ink-3);margin-top:0.5rem;">Click any pipeline stage to see details.</p>
+  </div>
+
+  <!-- RESULTS TABLE -->
+  <div class="content-section reveal">
+    <p class="section-label">Results</p>
+    <h2>Candidate gRNA rankings</h2>
+    <div class="divider"></div>
+    <p>
+      Of 649 total candidates scanned, 20 were scored and the top 5 were
+      validated against the wolf genome via NCBI BLAST. Four candidates returned
+      zero off-target hits with ≤3 mismatches. The top-ranked candidate,
+      <span style="font-family:var(--mono);font-size:0.9em">AGTCCTGCTGGATTTCCGGG</span>,
+      achieves a Doench efficiency score of 0.860 with no detectable off-target risk.
+    </p>
+
+    <div class="table-controls">
+      <span style="font-size:0.82rem;color:var(--ink-3);margin-right:0.25rem;">Filter:</span>
+      <button class="filter-btn active" onclick="filterTable('all', this)">All 20</button>
+      <button class="filter-btn" onclick="filterTable('blasted', this)">BLAST-validated only</button>
+      <button class="filter-btn" onclick="filterTable('low', this)">Low risk only</button>
+    </div>
+
+    <div class="table-wrap">
+      <table id="grna-table">
+        <thead>
+          <tr>
+            <th onclick="sortTable('rank')">#</th>
+            <th onclick="sortTable('seq')">gRNA sequence <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('strand')">Str</th>
+            <th onclick="sortTable('pos')">Position <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('gc')">GC% <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('doench')">Doench <span class="sort-icon">↕</span></th>
+            <th onclick="sortTable('final')">Final score <span class="sort-icon">↕</span></th>
+            <th>Off-target risk</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+        </tbody>
+      </table>
+      <div class="table-footer">
+        <span id="row-count">Showing 20 candidates</span>
+        <span>Sorted by final score</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DISCLAIMER -->
+  <div class="content-section reveal">
+    <p class="section-label">Important note</p>
+    <h2>Computational predictions only</h2>
+    <div class="divider"></div>
+    <p>
+      This analysis is a computational starting point. Every candidate
+      identified here would require experimental validation: first in cell culture
+      to test editing efficiency and specificity in wolf-derived cells,
+      then in appropriate animal models before any consideration of in vivo
+      application. CRISPR-based interventions in wild animal populations also face
+      significant regulatory, ethical, and ecological considerations
+      that extend well beyond this computational work.
+    </p>
+    <p>
+      The value of this pipeline right now is as a published, citable,
+      open-source framework: demonstrating which computational approaches are
+      feasible for non-model canid species and providing a benchmark dataset
+      for the field.
+    </p>
+    <div class="callout">
+      <div class="callout-label">Citation</div>
+      <p>
+        [Author]. (2025). Wolf TMPRSS2 CRISPR gRNA design pipeline (v1.0).
+        Rewild Genomics LLC. GitHub: rewild-genomics/wolf-crispr-grna.
+        <em>Preprint in preparation.</em>
+      </p>
+    </div>
+  </div>
+
+</div><!-- end page-content -->
+
+<!-- SIDEBAR -->
+<aside class="page-sidebar">
+  <div class="sidebar-card reveal">
+    <h3>Pipeline stats</h3>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Candidates scanned</span><span class="sidebar-stat-val">649</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">After CDS filter</span><span class="sidebar-stat-val">292</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">After poly-T filter</span><span class="sidebar-stat-val">288</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Top scored</span><span class="sidebar-stat-val">20</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">BLAST-validated</span><span class="sidebar-stat-val">5</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Low off-target risk</span><span class="sidebar-stat-val">4 / 5</span></div>
+  </div>
+
+  <div class="sidebar-card reveal">
+    <h3>Target details</h3>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Gene</span><span class="sidebar-stat-val">TMPRSS2</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Species</span><span class="sidebar-stat-val">C.l. baileyi</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Accession</span><span class="sidebar-stat-val">XM_072807049.1</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">CDS region</span><span class="sidebar-stat-val">330–1809</span></div>
+    <div class="sidebar-stat"><span class="sidebar-stat-label">Top score</span><span class="sidebar-stat-val">0.930</span></div>
+  </div>
+
+  <div class="sidebar-card reveal">
+    <h3>Code &amp; data</h3>
+    <a href="https://github.com" class="sidebar-link" target="_blank">
+      <span>↗</span> GitHub — wolf-crispr-grna
+    </a>
+    <a href="#" class="sidebar-link">
+      <span>↗</span> grna_report.csv (raw data)
+    </a>
+    <a href="#" class="sidebar-link">
+      <span>↗</span> wolf_tmprss2.gb (GenBank)
+    </a>
+  </div>
+
+  <div class="sidebar-card reveal">
+    <h3>Related work</h3>
+    <p style="font-size:0.82rem;color:var(--ink-2);line-height:1.6;margin-bottom:0.75rem;">
+      This pipeline framework is being extended to the population genomics analysis for Utah wolf reintroduction source population selection.
+    </p>
+    <a href="index.html#research" class="sidebar-link">← All research projects</a>
+  </div>
+</aside>
+
+</div><!-- end page-body -->
+
+<footer>
+  <div class="footer-inner">
+    <span class="footer-logo">Rewild Utah</span>
+    <span>© 2025 Rewild Genomics LLC · rewildutah.com</span>
+    <a href="index.html" style="color:rgba(255,255,255,0.6)">← Back to home</a>
+  </div>
+</footer>
+
+<script>
+// ── REVEAL ON SCROLL ──────────────────────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── PIPELINE DETAIL TOGGLE ────────────────────────────────────────────────────
+let lastPipelineStep = -1;
+function showPipelineDetail(step) {
+  const detail = document.getElementById('pipeline-detail');
+  if (lastPipelineStep === step) {
+    detail.classList.remove('visible');
+    lastPipelineStep = -1;
+    return;
+  }
+  detail.classList.add('visible');
+  lastPipelineStep = step;
+}
+
+// ── gRNA TABLE DATA ───────────────────────────────────────────────────────────
+const gRNAData = [
+  { rank:1,  seq:'AGTCCTGCTGGATTTCCGGG', strand:'+', pos:1459, gc:60.0, doench:0.860, final:0.930, risk:'low',    blasted:true,  note:'PRIORITY: high efficiency, zero off-target hits' },
+  { rank:2,  seq:'ACTGGAGTGACAGCTACGGG', strand:'+', pos:853,  gc:60.0, doench:0.785, final:0.892, risk:'low',    blasted:true,  note:'RECOMMENDED: good efficiency, low off-target risk' },
+  { rank:3,  seq:'CGTCAGAGCCGGATCGTGGG', strand:'+', pos:1083, gc:70.0, doench:0.927, final:0.889, risk:'low',    blasted:true,  note:'RECOMMENDED: good efficiency, low off-target risk' },
+  { rank:4,  seq:'AGGAATAGCGGATGACAGCG', strand:'+', pos:923,  gc:55.0, doench:0.773, final:0.886, risk:'low',    blasted:true,  note:'RECOMMENDED: good efficiency, low off-target risk' },
+  { rank:5,  seq:'TCGGTGTCCGGGATAGAGTG', strand:'+', pos:669,  gc:60.0, doench:0.770, final:0.841, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:6,  seq:'AGGTTCCTCCACACAGTGGG', strand:'-', pos:1213, gc:60.0, doench:0.768, final:0.840, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:7,  seq:'GACCTCAGACGAGCTGAACG', strand:'+', pos:1505, gc:60.0, doench:0.755, final:0.834, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:8,  seq:'GTTCAGCTTCATGAAGCTGG', strand:'-', pos:949,  gc:50.0, doench:0.735, final:0.824, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:9,  seq:'GTGTACTGGGGCACTGCAGG', strand:'-', pos:468,  gc:65.0, doench:0.725, final:0.819, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:10, seq:'CTGGAGTGACAGCTACGGGA', strand:'+', pos:854,  gc:60.0, doench:0.715, final:0.815, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:11, seq:'CTATGGACACGGACACCGAG', strand:'+', pos:1292, gc:60.0, doench:0.715, final:0.815, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:12, seq:'GGTCTTCCCTTTCTCGTAGG', strand:'-', pos:1489, gc:55.0, doench:0.708, final:0.811, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:13, seq:'GACTCCTGCCAGGGTGACAG', strand:'+', pos:1632, gc:65.0, doench:0.708, final:0.811, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:14, seq:'AAGGAATAGCGGATGACAGC', strand:'+', pos:922,  gc:50.0, doench:0.708, final:0.811, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:15, seq:'CGGCTCTTCAGAGTGACCAG', strand:'-', pos:1662, gc:60.0, doench:0.705, final:0.810, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:16, seq:'GGACTTGGGCTGCGTGTGGA', strand:'-', pos:523,  gc:65.0, doench:0.795, final:0.808, risk:'medium', blasted:true,  note:'CAUTION: verify off-target site experimentally' },
+  { rank:17, seq:'AAGCCCGCGCAGATCATGGC', strand:'-', pos:1596, gc:65.0, doench:0.695, final:0.805, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:18, seq:'AGGAACCTCTAAACAACCCG', strand:'+', pos:1225, gc:50.0, doench:0.693, final:0.804, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:19, seq:'CGGCTGTCACGATCCACTCG', strand:'-', pos:1193, gc:65.0, doench:0.688, final:0.802, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+  { rank:20, seq:'AGGCGTCTGCAACTTCATGA', strand:'-', pos:1372, gc:50.0, doench:0.685, final:0.800, risk:'na',     blasted:false, note:'CANDIDATE: BLAST not yet run' },
+];
+
+let currentFilter = 'all';
+let sortCol = 'rank';
+let sortAsc = true;
+
+function riskChip(risk) {
+  if (risk === 'low')    return `<span class="risk-chip risk-low"><span class="risk-dot"></span>Low</span>`;
+  if (risk === 'medium') return `<span class="risk-chip risk-medium"><span class="risk-dot"></span>Medium</span>`;
+  return `<span class="risk-chip risk-na"><span class="risk-dot"></span>N/A</span>`;
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById('table-body');
+  tbody.innerHTML = data.map(r => `
+    <tr>
+      <td><span class="rank-badge ${r.rank <= 4 ? 'top' : ''}">${r.rank}</span></td>
+      <td class="seq-cell">${r.seq}</td>
+      <td style="font-family:var(--mono);font-size:0.78rem">${r.strand}</td>
+      <td style="font-family:var(--mono);font-size:0.78rem">${r.pos}</td>
+      <td style="font-family:var(--mono);font-size:0.78rem">${r.gc}%</td>
+      <td>
+        <div class="score-bar-wrap">
+          <div class="score-bar"><div class="score-bar-fill" style="width:${r.doench*100}%"></div></div>
+          <span class="score-num">${r.doench.toFixed(3)}</span>
+        </div>
+      </td>
+      <td>
+        <div class="score-bar-wrap">
+          <div class="score-bar"><div class="score-bar-fill" style="width:${r.final*100}%;background:${r.risk==='medium'?'#e09c2f':'var(--accent)'}"></div></div>
+          <span class="score-num">${r.final.toFixed(3)}</span>
+        </div>
+      </td>
+      <td>${riskChip(r.risk)}</td>
+      <td class="rec-tag ${r.rank===1?'priority':''}">${r.rank===1?'★ '+r.note:r.note}</td>
+    </tr>
+  `).join('');
+  document.getElementById('row-count').textContent = `Showing ${data.length} candidate${data.length !== 1 ? 's' : ''}`;
+}
+
+function filterTable(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilterSort();
+}
+
+function sortTable(col) {
+  if (sortCol === col) sortAsc = !sortAsc;
+  else { sortCol = col; sortAsc = col === 'rank'; }
+  applyFilterSort();
+}
+
+function applyFilterSort() {
+  let data = [...gRNAData];
+  if (currentFilter === 'blasted') data = data.filter(r => r.blasted);
+  if (currentFilter === 'low')     data = data.filter(r => r.risk === 'low');
+  const colMap = { rank:'rank', seq:'seq', strand:'strand', pos:'pos', gc:'gc', doench:'doench', final:'final' };
+  if (colMap[sortCol]) {
+    data.sort((a, b) => {
+      const va = a[colMap[sortCol]], vb = b[colMap[sortCol]];
+      return sortAsc ? (va > vb ? 1 : -1) : (va < vb ? 1 : -1);
+    });
+  }
+  renderTable(data);
+}
+
+// Initial render
+renderTable(gRNAData);
+</script>
+</body>
+</html>
